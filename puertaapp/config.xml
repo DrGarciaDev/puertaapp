@@ -9,4 +9,6 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
+    <allow-navigation href="http://*/*" />
+	<allow-intent href="https://*/*" />
 </widget>
