@@ -66,6 +66,9 @@
                             //ons.notification.alert('Usuario Operativo Correcto');
                             //window.open('ver_adeudo.php','_self');
                             //window.location.href = "https://puertadeacero.000webhostapp.com/ver_adeudo.php?usuario="+respuesta[1];
+                            document.getElementById('username').value = "";
+                            document.getElementById('password').value = "";
+
                             document.querySelector('#myNavigator').pushPage('page2.html', {data: {title: 'Puerta de Acero', casa: respuesta[1], password: respuesta[2], nombre: respuesta[3], adeudo: respuesta[4] } } );
                         }else{
                             ons.notification.alert('Usuario No Encontrado...');
@@ -75,6 +78,62 @@
                 };
 
                 xhttp.open("GET", "https://puertadeacero.000webhostapp.com/valida_usuario.php?usuario="+username+"&password="+password, true);
+                xhttp.send();
+            }
+
+            function guardar_registro() {
+                
+                var numero = document.getElementById('numero').value;
+                var nombre = document.getElementById('nombre').value;
+                var contra = document.getElementById('contra').value;
+                var adeudo = document.getElementById('adeudo').value;
+
+                if (numero === '' || nombre === ''
+                    || contra === '' || adeudo === '') {
+                    ons.notification.alert('Todos los campos son obligatorios');
+                    return;
+                }
+
+                var xhttp;
+                
+                if (window.XMLHttpRequest) {
+                    // code for modern browsers
+                    xhttp = new XMLHttpRequest();
+                } else {
+                    // code for IE6, IE5
+                    xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        //document.getElementById("demo").innerHTML = this.responseText;
+                        var cadena = this.responseText;
+                        //var respuesta = cadena.split('@');
+
+                        //ons.notification.alert(cadena);
+                        //ons.notification.alert(respuesta[0]);
+                        if (cadena == '1') {
+                            ons.notification.alert('Agregado Correctamente, puedes agregar mas...');
+                            document.getElementById('numero').value = "";
+                            document.getElementById('nombre').value = "";
+                            document.getElementById('contra').value = "";
+                            document.getElementById('adeudo').value = "";
+                            //window.open('principal.php','_self');
+                            //window.location.href = "https://puertadeacero.000webhostapp.com/principal.php";
+                        }else if(cadena == '0') {
+                            ons.notification.alert('No se registro la casa...');
+                            //window.open('ver_adeudo.php','_self');
+                            //window.location.href = "https://puertadeacero.000webhostapp.com/ver_adeudo.php?usuario="+respuesta[1];
+
+                            //document.querySelector('#myNavigator').pushPage('page2.html', {data: {title: 'Puerta de Acero', casa: respuesta[1], password: respuesta[2], nombre: respuesta[3], adeudo: respuesta[4] } } );
+                        }else{
+                            ons.notification.alert('Error desconocido...');
+                            //ons.notification.alert(respuesta);
+                        }
+                    }
+                };
+
+                xhttp.open("GET", "https://puertadeacero.000webhostapp.com/agregar.php?numero="+numero+"&nombre="+nombre+"&contra="+contra+"&adeudo="+adeudo, true);
                 xhttp.send();
             }
 
@@ -142,7 +201,6 @@
                     <ons-list-header>ADEUDO: </ons-list-header>
                     <ons-list-item modifier="longdivider" id="respuesta_adeudo"></ons-list-item>
                 </ons-list>
-                <ons-button id="push-button-reg">Registrarse</ons-button>
             </ons-page>
         </template> 
 
@@ -163,15 +221,18 @@
                 <ons-list modifier="inset">
                     
                     <ons-list-header>NUMERO DE CASA: </ons-list-header>
-                    <ons-list-item modifier="longdivider" id="respuesta_casa"></ons-list-item>
+                    <ons-input id="numero" modifier="underbar" placeholder="Numero de Casa" float></ons-input>
                     <ons-list-header>PASSWORD: </ons-list-header>
-                    <ons-list-item modifier="longdivider" id="respuesta_password"></ons-list-item>
+                    <ons-input id="contra" modifier="underbar" placeholder="Password" float></ons-input>
                     <ons-list-header>NOMBRE: </ons-list-header>
-                    <ons-list-item modifier="longdivider" id="respuesta_nombre"></ons-list-item>
+                    <ons-input id="nombre" modifier="underbar" placeholder="Nombre" float></ons-input>
                     <ons-list-header>ADEUDO: </ons-list-header>
-                    <ons-list-item modifier="longdivider" id="respuesta_adeudo"></ons-list-item>
+                    <ons-input id="adeudo" modifier="underbar" placeholder="Adeudo" float></ons-input>
+                    </ons-list>
+                    <div style="text-align: center; margin-top: 50px;">
+                        <ons-button onclick="guardar_registro()">Registrar casa</ons-button>
+                    </div>
                 </ons-list>
-
             </ons-page>
         </template> 
     </body>
